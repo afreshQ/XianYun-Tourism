@@ -23,7 +23,8 @@ export default {
   ** Global CSS
   */
   css: [
-    'element-ui/lib/theme-chalk/index.css'
+    'element-ui/lib/theme-chalk/index.css',
+    'assets/main.css'   //新增自定义的页面过渡样式
   ],
   /*
   ** Plugins to load before mounting the App
