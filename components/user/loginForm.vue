@@ -66,9 +66,24 @@ export default {
                        method:'post',
                        data:this.form
                    }).then(res=>{
-                       console.log(res.data);
-                       this.$store.commit('user/setUserInfo',res.data);
+                       if(res.status==200){
+                           this.$store.commit('user/setUserInfo',res.data);
+                           this.$message({
+                                message: '登陆成功',
+                                type: 'success'
+                            });
+                       }
+                   }).catch(res=>{
+                       console.log(res.response);
+                       if(res.response.status==400){
+                           this.$message.error(res.response.data.message);
+                       }
                    })
+               }else{
+                    this.$message({
+                        message: '请输入用户名或密码',
+                        type: 'warning'
+                    });
                }
            })
         }
