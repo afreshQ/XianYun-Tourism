@@ -61,29 +61,13 @@ export default {
 
            this.$refs.form.validate((valid)=>{
                if(valid){
-                   this.$axios({
-                       url:'/accounts/login',
-                       method:'post',
-                       data:this.form
-                   }).then(res=>{
-                       if(res.status==200){
-                           this.$store.commit('user/setUserInfo',res.data);
-                           this.$message({
-                                message: '登陆成功',
-                                type: 'success'
-                            });
-                       }
-                   }).catch(res=>{
-                       console.log(res.response);
-                       if(res.response.status==400){
-                           this.$message.error(res.response.data.message);
-                       }
-                   })
+                  this.$store.dispatch('user/login',this.form);
+
+                  this.$router.replace('/');
+
+                  this.$message.success('登录成功')
                }else{
-                    this.$message({
-                        message: '请输入用户名或密码',
-                        type: 'warning'
-                    });
+                    this.$message.warning('请输入用户名或密码');
                }
            })
         }
