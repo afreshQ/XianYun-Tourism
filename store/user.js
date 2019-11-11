@@ -14,8 +14,8 @@ export const mutations={
 
 //异步修改state的数据，组件的方法共享
 export const actions={
+    // 用户登录
     login(store,data){
-        console.log(this);
         
         this.$axios({
             url:'/accounts/login',
@@ -29,6 +29,24 @@ export const actions={
             // if(res.response.status==400){
             //     this.$message.error(res.response.data.message);
             // }
+        })
+    },
+
+
+    //发送验证码
+    sendCaptchas(store,tel){
+        // 返回验证码code
+        return this.$axios({
+            url: '/captchas',
+            method: "POST",
+            data: {
+                tel
+            }
+        }).then(res => {
+            
+            const {code} = res.data;
+            
+            return code;
         })
     }
 }

@@ -111,7 +111,7 @@ export default {
     },
     methods: {
         // 发送验证码
-        handleSendCaptcha(){
+        async handleSendCaptcha(){
             
             if(!this.form.username){
                 return;
@@ -119,21 +119,12 @@ export default {
             if(!(/^1[3456789]\d{9}$/.test(this.form.username))){
                 return;
             }
-        
-            this.$axios({
-                url: '/captchas',
-                method: "POST",
-                data: {
-                    tel: this.form.username
-                }
-            }).then(res => {
-                const {code} = res.data;
-                this.$alert(`模拟手机验证码为：${code}`, '提示', {
-                    confirmButtonText: '确定',
-                });
-            })
 
-           
+           const code = await this.$store.dispatch("user/sendCaptchas", this.form.username);
+            
+           await this.$alert(`模拟手机验证码: ${code}`,'提示',{
+               confirmButtonText:'确定'
+           })
         },
 
 
