@@ -51,12 +51,10 @@ export default {
     methods: {
         // 用户退出
         handleLogout(){
-            this.$store.commit('user/cleanUserInfo');
+            // 重新设置为默认值
+            this.$store.commit('user/setUserInfo',{token:'',user:{}});
 
-            this.$message({
-                message: "退出成功",
-                type: "success"
-            })
+            this.$message.success('退出成功');
         },
     }
 }
