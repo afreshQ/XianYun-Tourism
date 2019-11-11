@@ -59,13 +59,15 @@ export default {
         handleLoginSubmit(){
            console.log(this.form)
 
-           this.$refs.form.validate((valid)=>{
+           this.$refs.form.validate(async valid=>{
                if(valid){
-                  this.$store.dispatch('user/login',this.form);
+                 try {
+                    await this.$store.dispatch('user/login',this.form);
 
-                  this.$router.replace('/');
+                    this.$router.replace('/');
 
-                  this.$message.success('登录成功')
+                    this.$message.success('登录成功')
+                 } catch (error) {}
                }else{
                     this.$message.warning('请输入用户名或密码');
                }

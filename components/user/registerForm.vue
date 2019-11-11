@@ -137,12 +137,13 @@ export default {
            
                 this.$refs.form.validate(async (valid)=>{
                      if(valid){
-                     
+                       try {
                             await this.$store.dispatch('user/register',props);
 
                             this.$router.replace('/');
 
                             this.$message.success('注册成功')
+                       } catch (error) {}
                     }
                 })
         }
