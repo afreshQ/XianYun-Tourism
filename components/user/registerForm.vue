@@ -60,13 +60,23 @@
 export default {
     data(){
         
-        var checkPass = (rule, value, callback) => {
+        const validateUserName=(rule, value, callback)=>{
             if (value === '') {
-            callback(new Error('请再次输入密码'));
-            } else if (value !== this.form.password) {
-            callback(new Error('两次输入密码不一致!'));
+                callback(new Error('请输入手机号'));
+            } else if (!(/^1[3456789]\d{9}$/.test(value))) {
+                callback(new Error('手机号格式不正确'));
             } else {
-            callback();
+                callback();
+            }
+        }
+
+        var validatecheckPass = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请再次输入密码'));
+            } else if (value !== this.form.password) {
+                callback(new Error('两次输入密码不一致!'));
+            } else {
+                callback();
             }
         };
         return {
@@ -81,7 +91,8 @@ export default {
             // 表单规则
             rules: {
                 username : [
-                        { required: true, message: '请输入用户名/手机', trigger: 'blur' },
+                        // { required: true, message: '请输入用户名/手机', trigger: 'blur' },
+                        { validator: validateUserName, trigger: 'blur' },
                 ],
                 nickname: [
                         { required: true, message: '请输入昵称', trigger: 'blur' },
@@ -93,7 +104,7 @@ export default {
                         { required: true, message: '请输入密码', trigger: 'blur' },
                 ],
                 checkPassword: [
-                        { validator: checkPass, trigger: 'blur' },
+                        { validator: validatecheckPass, trigger: 'blur' },
                 ],
             },
         }
@@ -101,21 +112,11 @@ export default {
     methods: {
         // 发送验证码
         handleSendCaptcha(){
+            
             if(!this.form.username){
-                this.$confirm('手机号码不能为空', '提示', {
-                    confirmButtonText: '确定',
-                    showCancelButton: false,
-                    type: 'warning'
-                })
                 return;
             }
-
-            if(this.form.username.length !== 11){
-                this.$confirm('手机号码格式错误', '提示', {
-                    confirmButtonText: '确定',
-                    showCancelButton: false,
-                    type: 'warning'
-                })
+            if(!(/^1[3456789]\d{9}$/.test(this.form.username))){
                 return;
             }
         
@@ -127,10 +128,8 @@ export default {
                 }
             }).then(res => {
                 const {code} = res.data;
-                this.$confirm(`模拟手机验证码为：${code}`, '提示', {
+                this.$alert(`模拟手机验证码为：${code}`, '提示', {
                     confirmButtonText: '确定',
-                    showCancelButton: false,
-                    type: 'warning'
                 });
             })
 
