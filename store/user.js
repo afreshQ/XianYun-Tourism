@@ -1,7 +1,9 @@
-export const state={
-    userInfo:{
-        token:'',
-        user:{}
+export const state=()=>{
+    return {
+        userInfo:{
+            token:'',
+            user:{}
+        }
     }
 };
 
@@ -17,18 +19,13 @@ export const actions={
     // 用户登录
     login(store,data){
         
-        this.$axios({
+       return this.$axios({
             url:'/accounts/login',
             method:'post',
             data
         }).then(res=>{
             store.commit('setUserInfo',res.data);
             
-        }).catch(err=>{
-            // console.log(res.response);
-            // if(res.response.status==400){
-            //     this.$message.error(res.response.data.message);
-            // }
         })
     },
 
@@ -48,5 +45,22 @@ export const actions={
             
             return code;
         })
+    },
+
+
+    // 用户注册
+    register(store,props){
+
+           return this.$axios({
+                url:'/accounts/register',
+                method:'post',
+                data:props
+            }).then(res=>{
+               console.log(res);
+                
+               //注册完毕后登录
+                store.commit('setUserInfo',res.data);
+
+            })
     }
 }

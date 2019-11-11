@@ -134,29 +134,17 @@ export default {
             //不需要checkPassword
             let {checkPassword,...props}=this.form;
             console.log(props);
-            
-           this.$refs.form.validate((vaild)=>{
-               if(vaild){
-                   this.$axios({
-                       url:'/accounts/register',
-                       method:'post',
-                       data:props
-                   }).then(res=>{
-                       console.log(res.data);
-                        this.$message({
-                            message: '注册成功',
-                            type: 'success'
-                        });
-                   }).catch(res=>{
-                       const {message}=res.response.data
-                       console.log(message);
-                       this.$message({
-                            message: message,
-                            type: 'warning'
-                        });
-                   })
-               }
-           })
+           
+                this.$refs.form.validate(async (valid)=>{
+                     if(valid){
+                     
+                            await this.$store.dispatch('user/register',props);
+
+                            this.$router.replace('/');
+
+                            this.$message.success('注册成功')
+                    }
+                })
         }
     }
 }
