@@ -37,6 +37,7 @@
                 v-model="form.departDate"
                 placeholder="请选择日期" 
                 style="width: 100%;"
+                :picker-options="pickerOptions"
                 @change="handleDate">
                 </el-date-picker>
             </el-form-item>
@@ -77,7 +78,13 @@ export default {
                 departDate:''
             },
 
-            cities:[]
+            cities:[],
+
+            pickerOptions:{
+                disabledDate(time) {
+                    return time.getTime() < Date.now()-3600*1000*24;
+                }
+            }
         }
     },
     methods: {
@@ -153,9 +160,6 @@ export default {
             this.form.departDate=moment(value).format('YYYY-MM-DD');
             console.log(this.form.departDate);
             
-        //     disabledDate(time) {
-        //     return time.getTime() > Date.now();
-        //   },
         },
 
         // 触发和目标城市切换时触发
