@@ -19,6 +19,7 @@
                 :fetch-suggestions="queryDepartSearch"
                 placeholder="请搜索出发城市"
                 @select="handleDepartSelect"
+                @blur="handleDepartBlur"
                 class="el-autocomplete"
                 ></el-autocomplete>
             </el-form-item>
@@ -29,6 +30,7 @@
                 placeholder="请搜索到达城市"
                 @select="handleDestSelect"
                 class="el-autocomplete"
+                @blur="handleDestBlur"
                 ></el-autocomplete>
             </el-form-item>
             <el-form-item label="出发时间">
@@ -92,7 +94,19 @@ export default {
         handleSearchTab(item, index){
             
         },
-        
+        //处理输入框失去焦点的问题
+        handleDepartBlur(){
+            if(this.cities.length===0) return;
+            this.form.departCity=this.cities[0].value;
+            this.form.departCode=this.cities[0].sort;
+        },
+        //处理输入框失去焦点的问题
+        handleDestBlur(){
+            if(this.cities.length===0) return;
+            this.form.destCity=this.cities[0].value;
+            this.form.destCode=this.cities[0].sort;
+        },
+
         // 出发城市输入框获得焦点时触发
         // value 是选中的值，cb是回调函数，接收要展示的列表
         queryDepartSearch(value, cb){
