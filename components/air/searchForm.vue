@@ -24,6 +24,7 @@
             </el-form-item>
             <el-form-item label="到达城市">
                 <el-autocomplete
+                v-model="form.destCity"
                 :fetch-suggestions="queryDestSearch"
                 placeholder="请搜索到达城市"
                 @select="handleDestSelect"
@@ -33,6 +34,7 @@
             <el-form-item label="出发时间">
                 <!-- change 用户确认选择日期时触发 -->
                 <el-date-picker type="date" 
+                v-model="form.departDate"
                 placeholder="请选择日期" 
                 style="width: 100%;"
                 @change="handleDate">
@@ -66,9 +68,15 @@ export default {
             form:{
                 //出发城市
                 departCity:'',
+                departCode:'',
                 // 到达城市
                 destCity:'',
-            }
+                destCode:'',
+                // 日期
+                departDate:''
+            },
+
+            cities:[]
         }
     },
     methods: {
@@ -81,36 +89,67 @@ export default {
         // value 是选中的值，cb是回调函数，接收要展示的列表
         queryDepartSearch(value, cb){
 
-            cb([
-                {value: 1},
-                {value: 2},
-                {value: 3},
-            ]);
+            if(!value) return;
+
+            this.$axios({
+                url:'/airs/city',
+                method:'get',
+                params:{
+                    name:value
+                }
+            }).then(res=>{
+                let {data}=res.data
+                
+                this.cities=data.map(v=>{
+                    v.value=v.name.replace('市','');
+                    return v;
+                })
+                console.log(this.cities);
+                
+                cb(this.cities);
+            })
+
         },
 
         // 目标城市输入框获得焦点时触发
         // value 是选中的值，cb是回调函数，接收要展示的列表
         queryDestSearch(value, cb){
-            cb([
-                {value: 1},
-                {value: 2},
-                {value: 3},
-            ]);
+            if(!value) return;
+
+            this.$axios({
+                url:'/airs/city',
+                method:'get',
+                params:{
+                    name:value
+                }
+            }).then(res=>{
+                let {data}=res.data
+                
+                this.cities=data.map(v=>{
+                    v.value=v.name.replace('市','');
+                    return v;
+                })
+                console.log(this.cities);
+                
+                cb(this.cities);
+            })
         },
        
         // 出发城市下拉选择时触发
         handleDepartSelect(item) {
-            
+            this.form.departCity = item.value;
+            this.form.departCode = item.sort;
         },
 
         // 目标城市下拉选择时触发
         handleDestSelect(item) {
-            
+            this.form.destCity = item.value;
+            this.form.destCode = item.sort;
         },
 
         // 确认选择日期时触发
         handleDate(value){
-           
+
         },
 
         // 触发和目标城市切换时触发
@@ -120,6 +159,7 @@ export default {
 
         // 提交表单是触发
         handleSubmit(){
+           console.log(this.form);
            
         }
     },
