@@ -183,6 +183,25 @@ export default {
 
         // 提交表单是触发
         handleSubmit(){
+            const rules = [
+                { value: this.form.departCity, message: "请输入出发城市" },
+                { value: this.form.destCity, message: "请输入到达城市" },
+                { value: this.form.departDate, message: "请选择出发时间" },
+            ]
+
+            let valid=true;
+
+            rules.map(v=>{
+                if(!valid) return;
+
+                if(!v.value){
+                    this.$alert(v.message,'提示');
+                    valid=false;
+                }
+            })
+
+            if(!valid) return;
+
            console.log(this.form);
            
         }
