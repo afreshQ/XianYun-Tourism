@@ -92,7 +92,13 @@ export default {
     methods: {
         // tab切换时触发
         handleSearchTab(item, index){
-            
+            if(index === 1){
+                this.$confirm("目前暂不支持往返，请使用单程选票！", '提示', {
+                    confirmButtonText: '确定',
+                    showCancelButton: false,
+                    type: 'warning'
+                })
+            }
         },
         //处理输入框失去焦点的问题
         handleDepartBlur(){
