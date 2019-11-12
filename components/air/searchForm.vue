@@ -126,7 +126,6 @@ export default {
                     v.value=v.name.replace('市','');
                     return v;
                 })
-                console.log(this.cities);
                 
                 cb(this.cities);
             })
@@ -151,7 +150,6 @@ export default {
                     v.value=v.name.replace('市','');
                     return v;
                 })
-                console.log(this.cities);
                 
                 cb(this.cities);
             })
@@ -203,6 +201,11 @@ export default {
             if(!valid) return;
 
            console.log(this.form);
+
+            this.$router.push({
+                path:'/air/flights',
+                query:this.form
+            })
            
         }
     },
