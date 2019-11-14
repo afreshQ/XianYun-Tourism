@@ -26,6 +26,7 @@
                 </el-col>
             </el-row>
         </div>
+        <!-- 座位信息 -->
         <div class="flight-recommend"  v-show="isShowChild" v-for="(item,index) in data.seat_infos" :key="index">
             <!-- 隐藏的座位信息列表 -->
             <el-row type="flex"  justify="space-between" align="middle" >
@@ -50,6 +51,7 @@
                 </el-col>
             </el-row>
         </div>
+
     </div>
 </template>
 
