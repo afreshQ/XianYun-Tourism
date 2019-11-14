@@ -21,6 +21,11 @@
                     :value="item"
                     >
                     </el-option>
+                    <el-option
+                    label="测试机场"
+                    value="测试机场"
+                    >
+                    </el-option>
                 </el-select>
             </el-col>
             <el-col :span="4">
@@ -95,27 +100,55 @@ export default {
     methods: {
         // 选择机场时候触发
         handleAirport(value){
+            // 使用filter找出通过条件的数据，再通过事件传值给父组件
+            const arr=this.data.flights.filter(v=>{
+               return v.org_airport_name===value;
+            })
             
+            this.$emit('filtered',arr);
         },
 
         // 选择出发时间时候触发
         handleFlightTimes(value){
+            console.log(value);
+            const [from,to]=value.split('-');
             
+            const arr=this.data.flights.filter(v=>{
+                const time=+v.dep_time.split(':')[0];
+                if(from<=time && time<to){
+                    return v;
+                }
+            })
+            
+            this.$emit('filtered',arr);
         },
 
          // 选择航空公司时候触发
         handleCompany(value){
+            const arr=this.data.flights.filter(v=>{
+               return v.airline_name===value;
+            })
             
+            this.$emit('filtered',arr);
         },
-
+            
          // 选择机型时候触发
         handleAirSize(value){
-           
+           const arr=this.data.flights.filter(v=>{
+               return v.plane_size===value;
+            })
+            
+            this.$emit('filtered',arr);
         },
         
         // 撤销条件时候触发
         handleFiltersCancel(){
-            
+            this.airport= "";        // 机场
+            this.flightTimes= "";    // 出发时间
+            this.company= "";        // 航空公司
+            this.airSize= "";        // 机型大小
+
+            this.$emit('filtered',this.data.flights);
         },
     }
 }

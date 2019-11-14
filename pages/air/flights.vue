@@ -5,7 +5,7 @@
             <!-- 顶部过滤列表 -->
             <div class="flights-content">
                 <!-- 过滤条件 -->
-                <flightsFilters :data="flightsData"/>
+                <flightsFilters :data="cacheFlightsData" @filtered="filtered"/>
                 
                 <!-- 航班头部布局 -->
                 <flightsListHead/>
@@ -50,16 +50,21 @@ export default {
     data(){
         return {
             flightsData:{
-                flights:[],
-                info:{},
-                options:{}
+                flights:[]
             },
 
 
             //分页
             pageSize:5,
             pageIndex:1,
-            total:0
+            total:0,
+
+            //缓存的一份含所有机票信息的新数据
+            cacheFlightsData:{
+                flights:[],
+                info:{},
+                options:{}
+            }
         }
     },
 
@@ -84,6 +89,10 @@ export default {
             
             this.flightsData=res.data;
 
+            //缓存一份新的数据用于条件过滤，因为一直会有所有的数据，不会影响修改,
+            //而flightsData会被修改，再传到子组件的时候已经时过滤一遍的了,故要用到新的数据,
+            //使用es6的...语法拆分一份新数据（不同的内存地址）
+            this.cacheFlightsData = {...res.data};
             //总数量
             this.total=this.flightsData.total;
         })
@@ -101,6 +110,14 @@ export default {
         // 点击页数触发
         handleCurrentChange(val){
             this.pageIndex=val;
+        },
+
+        //子组件传过来的已通过过滤的列表
+        filtered(arr){
+            this.flightsData.flights=arr;
+            this.total=arr.length;
+            //回到第一页
+            this.pageIndex=1;
         }
     }
 }
