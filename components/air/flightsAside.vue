@@ -25,7 +25,7 @@
         v-for="(item,index) in $store.state.air.searchHistory" 
         :key="index">
             <h5>历史查询</h5>
-            <nuxt-link to="#">
+            <nuxt-link :to="`/air/flights?departCity=${item.departCity}&departCode=${item.departCode}&destCity=${item.destCity}&destCode=${item.destCode}&departDate=${item.departDate}`">
                 <el-row type="flex" 
                 justify="space-between" 
                 align="middle"

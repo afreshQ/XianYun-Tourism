@@ -83,26 +83,40 @@ export default {
         }
     },
 
-    mounted(){
-        this.$axios({
-            url:'/airs',
-            method:'get',
-            params:this.$route.query
-        }).then(res=>{
-            
-            this.flightsData=res.data;
+    //设置组件守卫
+    beforeRouteUpdate (to, from, next) {
+        // 在当前路由改变，但是该组件被复用时调用
+        // 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，
+        // 由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
+        // 可以访问组件实例 `this`
+        this.getAirListByQuery(to.query);
+        next();
+        
+    },
 
-            //缓存一份新的数据用于条件过滤，因为一直会有所有的数据，不会影响修改,
-            //而flightsData会被修改，再传到子组件的时候已经时过滤一遍的了,故要用到新的数据,
-            //使用es6的...语法拆分一份新数据（不同的内存地址）
-            this.cacheFlightsData = {...res.data};
-            //总数量
-            this.total=this.flightsData.total;
-        })
+    mounted(){
+       this.getAirListByQuery(this.$route.query);
     },
 
 
     methods:{
+        getAirListByQuery(query){
+             this.$axios({
+                url:'/airs',
+                method:'get',
+                params:query
+            }).then(res=>{
+                
+                this.flightsData=res.data;
+
+                //缓存一份新的数据用于条件过滤，因为一直会有所有的数据，不会影响修改,
+                //而flightsData会被修改，再传到子组件的时候已经时过滤一遍的了,故要用到新的数据,
+                //使用es6的...语法拆分一份新数据（不同的内存地址）
+                this.cacheFlightsData = {...res.data};
+                //总数量
+                this.total=this.flightsData.total;
+            })
+        },
         // 选择多少条每页触发
         handleSizeChange(val){
             this.pageSize=val;
