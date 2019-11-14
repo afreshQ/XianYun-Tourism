@@ -41,6 +41,7 @@
                         </el-col>
                         <el-col :span="3" class="choose-button">
                             <el-button 
+                            @click="handleChoose(data.id, item.seat_xid)"
                             type="warning" 
                             size="mini">
                             选定
@@ -104,7 +105,18 @@ export default {
         //控制座位是否显示
         showChild(){
             this.isShowChild=!this.isShowChild;
-        }
+        },
+
+        //点击选定按钮跳转到订单页
+        handleChoose(id, seatId){
+            this.$router.push({
+                path: "/air/order", 
+                query: {
+                    id,
+                    seat_xid: seatId
+                }
+            })
+        },
     }
 }
 </script>
