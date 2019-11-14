@@ -14,7 +14,7 @@
                 
                 
                 <!-- 航班信息 -->
-                <flightsItem :data="item" v-for="(item,index) in flightsData.flights" :key="index"/>
+                <flightsItem :data="item" v-for="(item,index) in dataList" :key="index"/>
 
                   <!-- 分页 -->
                 <el-pagination
@@ -53,10 +53,23 @@ export default {
                 flights:[]
             },
 
+
             //分页
             pageSize:5,
             pageIndex:1,
             total:0
+        }
+    },
+
+    // 封装显示多少的列表，监听所用到变量=>页数|条数|挂载完的值
+    computed:{
+        //存放列表机票数据
+        dataList(){
+            const arr=this.flightsData.flights.slice(
+                (this.pageIndex-1)*this.pageSize,
+                this.pageSize*this.pageIndex);
+
+            return arr;
         }
     },
 
@@ -68,19 +81,24 @@ export default {
         }).then(res=>{
             
             this.flightsData=res.data;
+
+            //总数量
+            this.total=this.flightsData.total;
         })
     },
 
 
     methods:{
         // 选择多少条每页触发
-        handleSizeChange(){
-
+        handleSizeChange(val){
+            this.pageSize=val;
+            //默认回到第一页
+            this.pageIndex=1;
         },
 
         // 点击页数触发
-        handleCurrentChange(){
-
+        handleCurrentChange(val){
+            this.pageIndex=val;
         }
     }
 }

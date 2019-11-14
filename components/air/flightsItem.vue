@@ -67,6 +67,7 @@ export default {
         }
     },
     computed:{
+        //计算路程大约时间
         timeRequired(){
              // 如果接口还没有请求回来时候，先返回空
             if(!this.data.arr_time) return "";
@@ -99,6 +100,8 @@ export default {
     },
 
     methods:{
+        
+        //控制座位是否显示
         showChild(){
             this.isShowChild=!this.isShowChild;
         }
