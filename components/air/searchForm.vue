@@ -102,13 +102,13 @@ export default {
         },
         //处理输入框失去焦点的问题
         handleDepartBlur(){
-            if(this.cities.length===0) return;
+            if(this.cities.length===0||this.form.departCity==='') return;
             this.form.departCity=this.cities[0].value;
             this.form.departCode=this.cities[0].sort;
         },
         //处理输入框失去焦点的问题
         handleDestBlur(){
-            if(this.cities.length===0) return;
+            if(this.cities.length===0||this.form.destCity==='') return;
             this.form.destCity=this.cities[0].value;
             this.form.destCode=this.cities[0].sort;
         },
