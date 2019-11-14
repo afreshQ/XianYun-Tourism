@@ -5,7 +5,7 @@
             <!-- 顶部过滤列表 -->
             <div class="flights-content">
                 <!-- 过滤条件 -->
-                <flightsFilters/>
+                <flightsFilters :data="flightsData"/>
                 
                 <!-- 航班头部布局 -->
                 <flightsListHead/>
@@ -50,7 +50,9 @@ export default {
     data(){
         return {
             flightsData:{
-                flights:[]
+                flights:[],
+                info:{},
+                options:{}
             },
 
 
