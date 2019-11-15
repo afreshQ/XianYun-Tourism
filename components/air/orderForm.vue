@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <div class="air-column">
-            <h2>乘机人{{allPrice}}</h2>
+            <h2>乘机人</h2>
             <el-form class="member-info">
                 <div class="member-info-item" v-for="(item,index) in users" :key="index">
 
@@ -71,6 +71,8 @@
                 <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
             </div>
         </div>
+        <!-- 用于调用计算总计的函数 -->
+        <span>{{allPrice}}</span>
     </div>
 </template>
 
@@ -113,7 +115,10 @@ export default {
             //人数
             price*=this.users.length;
 
-            return price;
+            //将计算好的价格存到store架构中
+            this.$store.commit('air/setAllPrice',price);
+
+            return '';
         }
     },
     methods: {
