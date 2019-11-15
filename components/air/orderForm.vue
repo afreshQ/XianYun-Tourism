@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <div class="air-column">
-            <h2>乘机人</h2>
+            <h2>乘机人{{allPrice}}</h2>
             <el-form class="member-info">
                 <div class="member-info-item" v-for="(item,index) in users" :key="index">
 
@@ -96,6 +96,24 @@ export default {
             captcha: "", // 验证码
             invoice: false   // 发票
 
+        }
+    },
+    computed:{
+        allPrice(){
+            
+            //总金额
+            let price=0;
+
+            //机票价格
+            price+=this.data.seat_infos.org_settle_price;
+            // 机建+燃油
+            price+=this.data.airport_tax_audlet;
+            //保险
+            price+=this.insurances.length*30;
+            //人数
+            price*=this.users.length;
+
+            return price;
         }
     },
     methods: {
