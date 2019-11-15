@@ -5,29 +5,30 @@
             <OrderForm :data="infoData"/>
 
             <!-- 侧边栏 -->
-            <div class="aside">
-                          
-            </div>
+            <OrderAside :data="infoData"/>
         </el-row>
     </div>
 </template>
 
 <script>
 import OrderForm from "@/components/air/orderForm.vue";
+import OrderAside from "@/components/air/OrderAside.vue";
 export default {
     components: {
-        OrderForm
+        OrderForm,
+        OrderAside
     },
     data(){
       return {
           // 机票信息
             infoData:{
-                insurances:[]
+                insurances:[],
+                seat_infos:{}
             }
       }
     },
     //获取机票信息
-    mounted(){
+    created(){
         const {id,seat_xid}=this.$route.query;
         
         this.$axios({
