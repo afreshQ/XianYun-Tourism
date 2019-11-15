@@ -27,12 +27,17 @@
             </el-row>
         </div>
         <!-- 座位信息 -->
-        <div class="flight-recommend"  v-show="isShowChild" v-for="(item,index) in data.seat_infos" :key="index">
+        <div class="flight-recommend"  v-show="isShowChild">
             <!-- 隐藏的座位信息列表 -->
             <el-row type="flex"  justify="space-between" align="middle" >
                 <el-col :span="4">低价推荐</el-col>
                 <el-col :span="20">
-                    <el-row type="flex" justify="space-between" align="middle" class="flight-sell">
+                    <el-row type="flex" 
+                    justify="space-between" 
+                    align="middle" 
+                    class="flight-sell"  
+                    v-for="(item,index) in data.seat_infos" 
+                    :key="index">
                         <el-col :span="16" class="flight-sell-left">
                             <span>{{item.name}}</span> | {{item.supplierName}}
                         </el-col>
