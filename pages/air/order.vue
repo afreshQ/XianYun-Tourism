@@ -28,14 +28,13 @@ export default {
       }
     },
     //获取机票信息
-    created(){
+    mounted(){
         const {id,seat_xid}=this.$route.query;
+
+        let token=this.$store.state.user.userInfo.token;
         
         this.$axios({
             url:'/airs/'+id,
-            headers:{
-                Authorization:this.$store.state.user.userInfo.token
-            },
             params: {
                 seat_xid
             }

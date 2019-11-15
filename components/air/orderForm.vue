@@ -174,6 +174,20 @@ export default {
                 air: this.data.id
             }
             console.log(orderData);
+
+            let token=this.$store.state.user.userInfo.token;
+
+            this.$axios({
+                url:'/airorders',
+                method:'post',
+                headers:{
+                    Authorization:"Bearer " + token
+                },
+                data:orderData
+            }).then(res=>{
+                console.log(res);
+                
+            })
         }
     }
 }
