@@ -71,6 +71,8 @@
                 撤销
     		</el-button>
         </div>
+        <!-- 用于调用computed里面的filter函数 -->
+        <span v-show="false">{{filter}}</span>
     </div>
 </template>
 
@@ -97,16 +99,37 @@ export default {
             ],
         }
     },
-    methods: {
-        // 选择机场时候触发
-        handleAirport(value){
-            // 使用filter找出通过条件的数据，再通过事件传值给父组件
+
+    //使用computed监听筛选值的变化
+    computed:{
+        filter(){
+
             const arr=this.data.flights.filter(v=>{
-               return v.org_airport_name===value;
+                //假设全部符合
+                let valid=true;
+
+                //处理起飞时间
+                const [from,to]=this.flightTimes.split('-');
+                const current=+v.dep_time.split(':')[0];
+                //然后找出不符合的
+                if(this.airport && this.airport!=v.org_airport_name || 
+                    this.company && this.company!=v.airline_name || 
+                    this.airSize && this.airSize!=v.plane_size || 
+                    this.flightTimes && (from>current || to<=current)){
+                    valid=false;
+                }
+
+               return valid;
             })
             
             this.$emit('filtered',arr);
-        },
+
+            return '';
+        }
+    },
+    methods: {
+        // 选择机场时候触发
+        handleAirport(value){},
 
         // 选择出发时间时候触发
         handleFlightTimes(value){
@@ -124,22 +147,10 @@ export default {
         },
 
          // 选择航空公司时候触发
-        handleCompany(value){
-            const arr=this.data.flights.filter(v=>{
-               return v.airline_name===value;
-            })
-            
-            this.$emit('filtered',arr);
-        },
+        handleCompany(value){},
             
          // 选择机型时候触发
-        handleAirSize(value){
-           const arr=this.data.flights.filter(v=>{
-               return v.plane_size===value;
-            })
-            
-            this.$emit('filtered',arr);
-        },
+        handleAirSize(value){},
         
         // 撤销条件时候触发
         handleFiltersCancel(){
