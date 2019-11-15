@@ -53,11 +53,11 @@
             <div class="contact">
                 <el-form label-width="60px">
                     <el-form-item label="姓名">
-                        <el-input></el-input>
+                        <el-input v-model="contactName"></el-input>
                     </el-form-item>
 
                     <el-form-item label="手机">
-                        <el-input placeholder="请输入内容">
+                        <el-input placeholder="请输入内容" v-model="contactPhone">
                             <template slot="append">
                             <el-button @click="handleSendCaptcha">发送验证码</el-button>
                             </template>
@@ -65,7 +65,7 @@
                     </el-form-item>
 
                     <el-form-item label="验证码">
-                        <el-input></el-input>
+                        <el-input v-model="captcha"></el-input>
                     </el-form-item>
                 </el-form>   
                 <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
@@ -93,7 +93,7 @@ export default {
             insurances: [], // 保险数据
             contactName: "", // 联系人名字
             contactPhone: "", // 联系人电话
-            captcha: "000000", // 验证码
+            captcha: "", // 验证码
             invoice: false   // 发票
 
         }
@@ -124,13 +124,33 @@ export default {
         },
         
         // 发送手机验证码
-        handleSendCaptcha(){
+        async handleSendCaptcha(){
             
+           try {
+               const code= await this.$store.dispatch('user/sendCaptchas',this.contactPhone);
+           
+                this.$alert(`模拟手机验证码为：${code}`, '提示', {
+                showCancelButton: false,
+                type: 'warning'
+                })
+           } catch (error) {}
+           
         },
 
         // 提交订单
         handleSubmit(){
-            console.log(this.users);
+            
+            const orderData={
+                users: this.users,
+                insurances: this.insurances,
+                contactName: this.contactName,
+                contactPhone: this.contactPhone,
+                invoice: this.invoice,
+                captcha: this.captcha,
+                seat_xid: this.data.seat_infos.seat_xid,
+                air: this.data.id
+            }
+            console.log(orderData);
         }
     }
 }
