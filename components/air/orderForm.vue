@@ -38,9 +38,9 @@
         <div class="air-column">
             <h2>保险</h2>
             <div>
-                <div class="insurance-item">
+                <div class="insurance-item" v-for="(item,index) in data.insurances" :key="index">
                     <el-checkbox 
-                    label="航空意外险：￥30/份×1  最高赔付260万" 
+                    :label="`${item.type}：￥${item.price}/份×${users.length}  最高赔付${item.compensation}`" 
                     border>
                     </el-checkbox> 
                 </div>
@@ -75,17 +75,27 @@
 
 <script>
 export default {
+    props: {
+        // 接收机票信息
+        data: {
+            type: Object,
+            default: {}
+        }
+    },
     data(){
         return {
+            // 乘机人信息
             users:[
                 {username:'',id:''}
-            ]
+            ],
+
         }
     },
     methods: {
         // 添加乘机人
         handleAddUsers(){
-            this.users.push({username:'',id:''})
+            // 使用es6的解构语法添加新的对象
+            this.users=[...this.users,{username:'',id:''}]
         },
         
         // 移除乘机人
@@ -101,7 +111,6 @@ export default {
         // 提交订单
         handleSubmit(){
             console.log(this.users);
-            
         }
     }
 }
