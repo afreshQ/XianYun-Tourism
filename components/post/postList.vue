@@ -116,6 +116,7 @@ export default {
             -webkit-line-clamp: 3;
             overflow: hidden;
             margin-bottom: 15px;
+            color: #666;
         }
         .item-images{
             display: flex;

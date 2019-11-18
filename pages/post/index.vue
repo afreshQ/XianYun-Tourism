@@ -22,7 +22,7 @@
           <div class="post-wrapper">
             <!-- 城市搜索 -->
             <div class="city-search">
-              <el-input v-model="cityName" placeholder="请输入想去的地方，比如：'广州'">
+              <el-input v-model="cityNameSearch" placeholder="请输入想去的地方，比如：'广州'">
                 <el-button slot="append" icon="el-icon-search"></el-button>
               </el-input>
               <div class="search-recommend">推荐: <span class="recommend">广州</span>
@@ -41,6 +41,16 @@
             <div class="post-list">
               <postList :data="postItem" v-for="(postItem,index) in allPostData" :key="index"/>
             </div>
+            <!-- 分页组件 -->
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="pageIndex"
+              :page-sizes="[3,5,10]"
+              :page-size="pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="total">
+            </el-pagination>
           </div>
         </el-col>
       </el-row>
@@ -57,7 +67,7 @@ export default {
   },
   data(){
     return {
-      cityName:'',
+      cityNameSearch:'',
       allMenuData:[],
       allPostData:[
         {
@@ -66,6 +76,9 @@ export default {
         }
         ],
 
+      // 分页需要的变量
+      pageSize:3,
+      pageIndex:1,
       total:0
     }
   },
@@ -80,13 +93,20 @@ export default {
           this.allMenuData=data;
       })
 
-      //获取推荐菜单
+      this.getPostList()
+  },
+
+  methods:{
+    //获取推荐菜单
+    getPostList(){
       this.$axios({
         url:'/posts',
         method:'get',
-        // params:{
-        //   city:'广州'
-        // }
+        params:{
+          city:this.cityNameSearch?this.cityNameSearch:null,
+          _start:(this.pageIndex-1)*this.pageSize,
+          _limit: this.pageSize
+        }
       }).then(res=>{
         const {data,total}=res.data;
         console.log(data);
@@ -94,6 +114,23 @@ export default {
         this.allPostData=data;
         this.total=total;
       })
+      
+    },
+
+    //切换多少条每页触发
+    handleSizeChange(val){
+      console.log(`每页 ${val} 条`);
+      this.pageSize=val;
+      this.pageIndex=1;
+      this.getPostList();
+    },
+
+    // 点击页数触发
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.pageIndex=val;
+      this.getPostList();
+    }
   }
 }
 </script>
