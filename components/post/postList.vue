@@ -1,12 +1,13 @@
 <template>
    <div>
+       <!-- 单封面文章 -->
     <el-row class="post-item" type="flex" justify="space-between" v-if="data.images.length<3">
         <el-col :span="8">
             <img class="item-img" :src="data.images.length>0?data.images[0]:'/img/default.jpg'" alt="">
         </el-col>
         <el-col :span="16">
             <div class="item-text">
-                <h4 class="item-title"><nuxt-link to="#">{{data.title}}</nuxt-link></h4>
+                <h4 class="item-title"><nuxt-link :to="`/post/detialPost?id=${data.id}`">{{data.title}}</nuxt-link></h4>
                 <p class="item-content">
                     {{data.summary}}
                 </p>
@@ -30,6 +31,7 @@
             </div>
         </el-col>
     </el-row>
+    <!-- 多封面文章 -->
     <el-row class="post-item" type="flex" justify="space-between" v-else>
         <el-col :span="24">
             <div class="item-text">
