@@ -9,21 +9,17 @@
                     <el-breadcrumb-item>攻略详情</el-breadcrumb-item>
                 </el-breadcrumb>
             </div>
-            <div class="detial-post">
-                <div class="post-header">
-                    <h1 class="post-title">{{postData.title}}</h1>
-                    <div class="release-news">
-                        <span>攻略 : {{postData.city.created_at}}</span>
-                        <span>阅读 : {{postData.watch}}</span>
-                    </div>
-                </div>
-                <div class="post-content" v-html="postData.content"></div>
-                <div class="post-footer">
-                    <div class="icon"><i class="el-icon-chat-line-square"></i><p>评论({{postData.comments.length}})</p></div>
-                    <div class="icon"><i class="el-icon-star-off"></i><p>收藏</p></div>
-                    <div class="icon"><i class="el-icon-share"></i><p>分享</p></div>
-                    <div class="icon"><i class="el-icon-thumb"></i><p>点赞({{postData.like}})</p></div>
-                </div>
+            <!-- 文章详情渲染 -->
+            <postRender :postData="postData"/>
+             <div class="post-bar">
+                <div class="icon"><i class="el-icon-chat-line-square"></i><p>评论({{postData.comments.length}})</p></div>
+                <div class="icon"
+                @click="handleStar"
+                ><i class="el-icon-star-off"></i><p>收藏</p></div>
+                <div class="icon"><i class="el-icon-share"></i><p>分享</p></div>
+                <div class="icon"
+                @click="handleLike"
+                ><i class="el-icon-thumb"></i><p>点赞({{postData.like}})</p></div>
             </div>
         </el-col>
         <el-col :span="7">
@@ -34,17 +30,26 @@
 </template>
 
 <script>
+import postRender from '@/components/post/postRender';
 export default {
+    components:{
+        postRender
+    },
     data(){
         return {
             postData:{
+                
                 city:{},
                 comments:[]
-            }
+            },
+
+            //该文章id
+            postId:null
         }
     },
     mounted(){
         const {id}=this.$route.query;
+        this.postId=id;
 
         this.$axios({
             url:'/posts',
@@ -58,6 +63,37 @@ export default {
             this.postData=data[0];
 
         })
+    },
+
+    methods:{
+        //收藏文章
+        handleStar(){
+            this.$axios({
+                url:'/posts/star',
+                headers:{
+                    Authorization:"Bearer "+this.$store.state.user.userInfo.token
+                },
+                params:{
+                    id:this.postId
+                }
+            }).then(res=>{
+                console.log(res);
+            })
+        },
+
+        handleLike(){
+             this.$axios({
+                url:'/posts/like',
+                headers:{
+                    Authorization:"Bearer "+this.$store.state.user.userInfo.token
+                },
+                params:{
+                    id:this.postId
+                }
+            }).then(res=>{
+                console.log(res);
+            })
+        }
     }
 }
 </script>
@@ -67,56 +103,23 @@ export default {
   width:1000px;
   margin:20px auto;
 }
-.detial-post{
-    .post-header{
-        .post-title{
-            padding: 20px 0;
-            font-size: 32px;
-            border-bottom: 1px solid #dddddd;
-        }
-        .release-news{
-            padding: 20px;
-            float: right;
-            span{
-                margin-left: 15px;
-                color: #999999;
-            }
-        }
-    }
-    .post-content{
-        clear: both;
-        /deep/p{
-            line-height: 24px;
-        }
-        /deep/span > img{
-            margin: 10px 0;
-            width: 100%;
-            object-fit: cover;
-        }
-        /deep/p > img{
-            margin: 10px 0;
-            object-fit: cover;
-        }
-    }
-
-    .post-footer{
-        padding: 50px 0 30px 0;
+.post-bar{
+    padding: 50px 0 30px 0;
+    display: flex;
+    justify-content: center;
+    .icon{
+        margin: 0 30px;
         display: flex;
-        justify-content: center;
-        .icon{
-            margin: 0 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            i{
-                font-size: 40px;
-                color: #409eff;
-            }
-            p{
-                color: #999999;
-                font-size: 14px;
-                margin-top: 5px;
-            }
+        flex-direction: column;
+        align-items: center;
+        i{
+            font-size: 40px;
+            color: #409eff;
+        }
+        p{
+            color: #999999;
+            font-size: 14px;
+            margin-top: 5px;
         }
     }
 }
