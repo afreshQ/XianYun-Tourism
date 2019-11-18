@@ -33,7 +33,7 @@
     <el-row class="post-item" type="flex" justify="space-between" v-else>
         <el-col :span="24">
             <div class="item-text">
-                <h4 class="item-title"><nuxt-link to="#">{{data.title}}</nuxt-link></h4>
+                <h4 class="item-title"><nuxt-link :to="`/post/detialPost?id=${data.id}`">{{data.title}}</nuxt-link></h4>
                 <p class="item-content">
                     {{data.summary}}
                 </p>
