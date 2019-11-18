@@ -47,7 +47,7 @@ export default {
             this.menuIndex=index;
         },
         sendCity(city){
-            this.$emit('setCity',city);
+            this.$emit('setSeacrhCity',city);
         }
     }
 }

@@ -5,7 +5,7 @@
         <el-col :span="7">
           <div class="sidebar">
             <!-- 城市列表 -->
-            <cityMenu :data="allMenuData" />
+            <cityMenu :data="allMenuData" @setSeacrhCity="setSeacrhCity" />
 
             <!-- 推荐城市 -->
             <div class="recommendCity">
@@ -147,10 +147,17 @@ export default {
       this.getPostList();
     },
 
+    //点击推荐的城市触发
     handleRecommend(city){
+     this.setSeacrhCity(city)
+    },
+
+    //设置搜索框的城市名称，并调用搜索方法
+    setSeacrhCity(city){
       this.cityNameSearch=city;
       this.getPostList();
     }
+
   }
 }
 </script>
