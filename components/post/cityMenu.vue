@@ -1,21 +1,24 @@
 <template>
-    <div class="contianer" @mouseout="isShowMenu=false">
+    <div class="contianer"  @mouseleave="isShowMenu=false">
         <div class="city-list">
-            <div class="city-item" v-for="(item,index) in data" :key="index" >
-                <div class="city-item-content" @mouseover="showMenu(index)">
-                    <span>{{item.type}}</span>
+            <div class="city-item" v-for="(item,index) in data" :key="index" @mouseover="showMenu(index)">
+                <div class="city-item-content" >
+                    <span class="item-txt">{{item.type}}</span>
                     <i class="el-icon-arrow-right"></i>
                 </div>
             </div>
         </div>
         <div class="city-menu" v-if="isShowMenu">
             <ul>
-                <li class="menu-item" v-for="(item,index) in data[menuIndex].children" :key="index">
-                    <el-link>
-                          <i class="number">{{index+1}}</i>
-                          <strong class="city">{{item.city}}</strong>
-                          <span>{{item.desc}}</span>
-                    </el-link>
+                <li class="menu-item" v-for="(item,index) in data[menuIndex].children" :key="index" >
+                    
+                            <i class="number blue">{{index+1}}</i>
+                        <div>
+                            <el-link class="link" type="info" :underline="false" @click="sendCity(item.city)">
+                                <strong class="city">{{item.city}}</strong>
+                                <span class="desc">{{item.desc}}</span>
+                            </el-link>
+                        </div>
                 </li>
             </ul>
         </div>
@@ -42,6 +45,9 @@ export default {
         showMenu(index){
             this.isShowMenu=true;
             this.menuIndex=index;
+        },
+        sendCity(city){
+            this.$emit('setCity',city);
         }
     }
 }
@@ -66,7 +72,10 @@ export default {
         align-items: center;
         padding: 0 20px;
         border-bottom: 1px solid #dddddd;
-        span{
+        &:hover{
+            color: #409eff;
+        }
+        .item-txt{
             font-size: 14px;
         }
         i{
@@ -88,8 +97,15 @@ export default {
         font-size: 14px;
         display: flex;
         align-items: center;
+        .blue{
+            color:#409eff;
+        }
+        .link:hover .desc{
+            color:#409eff;
+        }
         .number{
             font-size: 20px;
+            vertical-align: middle;
         }
         .city{
             margin: 0 10px;
