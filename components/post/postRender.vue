@@ -4,7 +4,7 @@
             <h1 class="post-title">{{postData.title}}</h1>
             <div class="release-news">
                 <span>攻略 : {{postData.city.created_at}}</span>
-                <span>阅读 : {{postData.watch}}</span>
+                <span>阅读 : {{postData.watch?postData.watch:0}}</span>
             </div>
         </div>
         <div class="post-content" v-html="postData.content"></div>

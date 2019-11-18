@@ -12,14 +12,14 @@
             <!-- 文章详情渲染 -->
             <postRender :postData="postData"/>
              <div class="post-bar">
-                <div class="icon"><i class="el-icon-chat-line-square"></i><p>评论({{postData.comments.length}})</p></div>
+                <div class="icon"><i class="el-icon-chat-line-square"></i><p>评论({{postData.comments.length | zerofill}})</p></div>
                 <div class="icon"
                 @click="handleStar"
                 ><i class="el-icon-star-off"></i><p>收藏</p></div>
                 <div class="icon"><i class="el-icon-share"></i><p>分享</p></div>
                 <div class="icon"
                 @click="handleLike"
-                ><i class="el-icon-thumb"></i><p>点赞({{postData.like}})</p></div>
+                ><i class="el-icon-thumb"></i><p>点赞({{postData.like | zerofill}})</p></div>
             </div>
         </el-col>
         <el-col :span="7">
@@ -77,7 +77,7 @@ export default {
                     id:this.postId
                 }
             }).then(res=>{
-                console.log(res);
+                this.$message.success(res.data.message);
             })
         },
 
@@ -91,8 +91,15 @@ export default {
                     id:this.postId
                 }
             }).then(res=>{
-                console.log(res);
+                this.$message.success(res.data.message);
             })
+        }
+    },
+
+    filters:{
+        zerofill(value){
+
+            return value?value:0
         }
     }
 }
