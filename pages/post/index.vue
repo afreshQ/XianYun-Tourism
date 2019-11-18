@@ -23,11 +23,16 @@
             <!-- 城市搜索 -->
             <div class="city-search">
               <el-input v-model="cityNameSearch" placeholder="请输入想去的地方，比如：'广州'">
-                <el-button slot="append" icon="el-icon-search"></el-button>
+                <el-button slot="append" icon="el-icon-search" @click="handleCitySearch"></el-button>
               </el-input>
-              <div class="search-recommend">推荐: <span class="recommend">广州</span>
-                      <span class="recommend">上海</span>
-                      <span class="recommend">北京</span>
+              <div class="search-recommend">推荐 : 
+                <span class="recommend" 
+                v-for="(item,index) in recommendCity"
+                :key="index" 
+                @click="handleRecommend(item)"
+                >
+                  {{item}}
+                </span>
               </div>
             </div>
             <!-- 标题 -->
@@ -68,13 +73,18 @@ export default {
   data(){
     return {
       cityNameSearch:'',
+
+      recommendCity:[
+        '广州','上海','北京'
+      ],
+
       allMenuData:[],
       allPostData:[
         {
           images:[],
           account:{}
         }
-        ],
+      ],
 
       // 分页需要的变量
       pageSize:3,
@@ -130,6 +140,16 @@ export default {
       console.log(`当前页: ${val}`);
       this.pageIndex=val;
       this.getPostList();
+    },
+
+    //城市搜索
+    handleCitySearch(){
+      this.getPostList();
+    },
+
+    handleRecommend(city){
+      this.cityNameSearch=city;
+      this.getPostList();
     }
   }
 }
@@ -156,13 +176,17 @@ export default {
   }
 }
 .post-wrapper{
-  margin-top: 20px;
+  margin: 20px 0;
   .search-recommend{
     padding: 10px 0;
     font-size: 12px;
     color: #666;
-    recommend{
+    .recommend{
       margin-right:5px;
+      &:hover{
+        color: #409eff;
+        cursor: pointer;
+      }
     }
   }
   .post-title{
