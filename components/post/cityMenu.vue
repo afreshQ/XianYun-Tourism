@@ -1,7 +1,7 @@
 <template>
     <div class="contianer" @mouseout="isShowMenu=false">
         <div class="city-list">
-            <div class="city-item" v-for="(item,index) in allMenuData" :key="index" >
+            <div class="city-item" v-for="(item,index) in data" :key="index" >
                 <div class="city-item-content" @mouseover="showMenu(index)">
                     <span>{{item.type}}</span>
                     <i class="el-icon-arrow-right"></i>
@@ -10,9 +10,9 @@
         </div>
         <div class="city-menu" v-if="isShowMenu">
             <ul>
-                <li class="menu-item" v-for="(item,index) in menuData" :key="index">
+                <li class="menu-item" v-for="(item,index) in data[menuIndex].children" :key="index">
                     <el-link>
-                          <i class="number">{{index}}</i>
+                          <i class="number">{{index+1}}</i>
                           <strong class="city">{{item.city}}</strong>
                           <span>{{item.desc}}</span>
                     </el-link>
@@ -24,31 +24,24 @@
 
 <script>
 export default {
+    props:{
+        data:{
+            type:Array,
+            default:[]
+        }
+    },
     data(){
         return {
-            allMenuData:[],
 
             isShowMenu:false,
 
-            menuData:[]
+            menuIndex:0
         }
     },
-    mounted(){
-
-        this.$axios({
-            url:'/posts/cities',
-            method:'get'
-        }).then(res=>{
-            const {data}=res.data;
-            console.log(data);
-            this.allMenuData=data;
-        })
-    },
-
     methods:{
         showMenu(index){
             this.isShowMenu=true;
-            this.menuData=this.allMenuData[index].children;
+            this.menuIndex=index;
         }
     }
 }
