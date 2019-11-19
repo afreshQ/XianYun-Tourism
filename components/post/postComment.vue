@@ -15,6 +15,7 @@
                     <el-col>
                         <el-upload
                         name="files"
+                        :file-list="form.pics"
                         :action="$axios.defaults.baseURL + '/upload'"
                         list-type="picture-card"
                         :on-success="coverUploaded"
@@ -108,7 +109,12 @@ export default {
         },
         // 文件上传成功时的钩子
         coverUploaded(response){
-            this.form.pics.push(response[0]);
+            console.log(response);
+            
+            const arr=response.map(v => {
+                return v.url=this.$axios.defaults.baseURL+v.url;
+            });
+            this.form.pics.push(...response);
         },
         //图片删除时的钩子
         handleRemove(file, fileList) {
@@ -138,8 +144,19 @@ export default {
                 },
                 data:this.form
             }).then(res=>{
-                console.log(res);
                 
+                const {message}=res.data;
+
+                this.$message.success(message);
+
+                this.pageIndex=1;
+                this.pageSize=3;
+                this.getComments();
+
+                this.form={
+                    content:'',
+                    pics:[]
+                };
             })
         },
 
