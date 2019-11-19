@@ -39,7 +39,15 @@
 
 
             <!-- 分页 -->
-            <div></div>
+            <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="pageIndex"
+            :page-sizes="[3, 6, 9]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total">
+            </el-pagination>
     </div>
 </template>
 
@@ -51,6 +59,9 @@ export default {
     },
     data(){
         return {
+            // 当前文章id
+            postId:null,
+
             commentData:[],
 
             //图片预览组件
@@ -62,27 +73,40 @@ export default {
                 content:'',
                 pics:[]
             },
+
+            //分页变量
+            pageIndex:1,
+            pageSize:3,
+            total:0
+
         }
     },
 
     mounted(){
         const {id}=this.$route.query;
-        this.$axios({
-            url:'/posts/comments',
-            params:{
-                post:id
-            }
-        }).then(res=>{
-
-            const {data}=res.data;
-            console.log(data);
-            
-            this.commentData=data;
-        })
+        this.postId=id;
+        this.getComments();
     },
 
     methods:{
-                // 文件上传成功时的钩子
+        //获取评论
+        getComments(){
+            this.$axios({
+                url:'/posts/comments',
+                params:{
+                    post:this.postId,
+                    _start:(this.pageIndex-1)*this.pageSize,
+                    _limit:this.pageSize
+                }
+            }).then(res=>{
+                const {data,total}=res.data;
+                console.log('评论数据',data);
+                
+                this.commentData=data;
+                this.total=total;
+            })
+        },
+        // 文件上传成功时的钩子
         coverUploaded(response){
             this.form.pics.push(response[0]);
         },
@@ -117,6 +141,22 @@ export default {
                 console.log(res);
                 
             })
+        },
+
+
+
+        // 分页···································
+        //每页多少条
+        handleSizeChange(val){
+            this.pageSize=val;
+            this.pageIndex=1;
+            this.getComments();
+
+        },
+        //页数
+        handleCurrentChange(val){
+            this.pageIndex=val;
+            this.getComments();
         }
     }
 }
@@ -152,5 +192,9 @@ export default {
         text-align: center;
         border: 1px dashed #dddddd;
     }
+}
+/deep/.el-pagination{
+    width: 100%;
+    margin-top: 20px;
 }
 </style>
