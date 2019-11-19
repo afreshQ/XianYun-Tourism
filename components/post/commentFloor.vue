@@ -1,26 +1,28 @@
 <template>
-  <div class="floor-item">
-    <floor v-if="data.parent" :data="data.parent"/>
-    <div class="header">
-        <div class="userInfo">
-            <span class="username">{{data.account.nickname}}</span>
-            <i>{{data.account.created_at | time}}</i>
+  <div class="floor-item" @mouseenter="isShowRely=!isShowRely" @mouseleave="isShowRely=!isShowRely">
+    <floor v-if="data.parent" :data="data.parent" :floorLength="floorLength-1"/>
+    <div class="pad">
+        <div class="header">
+            <div class="userInfo">
+                <span class="username">{{data.account.nickname}}</span>
+                <i>{{+data.account.created_at | time}}</i>
+            </div>
+            <span>{{floorLength}}</span>
         </div>
-        <span>1</span>
+        <div class="content">
+            <p>{{data.content}}</p>
+            <el-row v-if="data.pics.length>0" class="cmt-imgs">
+                <el-image 
+                v-for="(item,index) in data.pics" 
+                :key="index"
+                style="width: 100px; height: 100px"
+                :src="$axios.defaults.baseURL+item.url" 
+                :preview-src-list="[$axios.defaults.baseURL+item.url]">
+                </el-image>
+            </el-row>
+        </div>
+        <div class="reply" :class="{hide:!isShowRely,show:isShowRely}"><el-link type="primary">回复</el-link></div>
     </div>
-    <div class="content">
-        <p>{{data.content}}</p>
-        <el-row v-if="data.pics.length>0" class="cmt-imgs">
-            <el-image 
-            v-for="(item,index) in data.pics" 
-            :key="index"
-            style="width: 100px; height: 100px"
-            :src="$axios.defaults.baseURL+item.url" 
-            :preview-src-list="[$axios.defaults.baseURL+item.url]">
-            </el-image>
-        </el-row>
-    </div>
-    <div class="reply"><el-link type="primary">回复</el-link></div>
   </div>
 </template>
 
@@ -32,6 +34,14 @@ export default {
         data:{
             type:Object,
             default:{}
+        },
+        floorLength:{
+            type:Number
+        }
+    },
+    data(){
+        return {
+            isShowRely:false
         }
     },
     filters:{
@@ -44,12 +54,19 @@ export default {
 
 <style lang="less" scoped>
 .floor-item{
+    border-radius: 6px;
     padding: 2px;
     border: 1px solid #dddddd;
     margin-top: -1px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    .pad{
+        padding: 5px 10px 3px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
     .header{
         display: flex;
         justify-content: space-between;
@@ -79,5 +96,11 @@ export default {
     .reply{
         align-self: flex-end;
     }
+}
+.hide{
+    visibility: hidden;
+}
+.show{
+    visibility: visible;
 }
 </style>

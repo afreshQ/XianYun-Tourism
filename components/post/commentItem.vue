@@ -1,17 +1,17 @@
 <template>
-  <div class="cmt-item">
+  <div class="cmt-item" @mouseenter="isShowRely=!isShowRely" @mouseleave="isShowRely=!isShowRely">
     <div class="header">
         <div class="userInfo">
             <img class="avater" :src="$axios.defaults.baseURL+data.account.defaultAvatar" alt="">
             <span class="username">{{data.account.nickname}}</span>
             <i>{{data.account.created_at | time}}</i>
         </div>
-        <span>1</span>
+        <span>{{floorLength}}</span>
     </div>
     
     <div class="content">
         <div class="cmt-floor" v-if="data.parent">
-            <commentFloor :data="data.parent"/>
+            <commentFloor :data="data.parent" :floorLength="floorLength-1"/>
         </div>
         <p>{{data.content}}</p>
         <el-row v-if="data.pics.length>0" class="cmt-imgs">
@@ -24,7 +24,7 @@
             </el-image>
         </el-row>
     </div>
-    <div class="reply"><el-link type="primary">回复</el-link></div>
+    <div class="reply" :class="{hide:!isShowRely,show:isShowRely}"><el-link type="primary">回复</el-link></div>
   </div>
 </template>
 
@@ -34,6 +34,26 @@ import moment from "moment";
 export default {
     components:{
         commentFloor
+    },
+    data(){
+        return {
+            isShowRely:false,
+            floorLength:1
+        }
+    },
+    mounted(){
+        this.floorLength=this.countParent(1,this.data);
+    },
+    methods:{
+        countParent(num, obj){
+            if (obj.parent) {
+                return this.countParent(num + 1, obj.parent)
+            }else {
+                // console.log(num);
+                
+                return num;
+            }
+        }
     },
     props:{
         data:{
@@ -52,6 +72,7 @@ export default {
 
 <style lang="less" scoped>
 .cmt-item{
+    border-radius: 12px;
     padding: 20px 20px 5px;
     border: 1px solid #dddddd;
     margin-top: -1px;
@@ -86,7 +107,8 @@ export default {
     .content{
         padding-left: 30px;
         .cmt-floor{
-        background-color: #f9f9f9;
+            border-radius: 6px;
+            background-color:#f4f4f5;
         }
         p{
             margin-top: 10px;
@@ -96,8 +118,16 @@ export default {
         }
     }
     .reply{
+        height: 24px;
+        line-height: 24px;
         align-self: flex-end;
     }
 
+}
+.hide{
+    visibility: hidden;
+}
+.show{
+    visibility: visible;
 }
 </style>
