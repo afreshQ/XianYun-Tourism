@@ -1,6 +1,7 @@
 <template>
   <section class="container">
-    <el-row type="flex" class="row-bg" :gutter="40">
+    <el-row type="flex" class="row-bg" :gutter="20">
+        <!-- 文章详情 -->
         <el-col :span="17">
             <!-- 面包屑导航 -->
             <div class="breadCrumbs">
@@ -58,8 +59,10 @@
 
             </div>
         </el-col>
+        <!-- 相关攻略 -->
         <el-col :span="7">
-            2
+            <h4 class="aside-title">相关攻略</h4>
+            <recommendList :data="item" v-for="(item,index) in recommendPostData" :key="index"/>
         </el-col>
     </el-row>
   </section>
@@ -68,10 +71,12 @@
 <script>
 import postRender from '@/components/post/postRender';
 import postComment from '@/components/post/postComment';
+import recommendList from '@/components/post/recommendList';
 export default {
     components:{
         postRender,
-        postComment
+        postComment,
+        recommendList
     },
     data(){
         return {
@@ -88,28 +93,58 @@ export default {
 
             //图片上传组件
             dialogImageUrl: '',
-            dialogVisible: false
+            dialogVisible: false,
+
+            //相关文章数据
+            recommendPostData:[]
         }
+    },
+    beforeRouteUpdate (to, from, next) {
+    // 在当前路由改变，但是该组件被复用时调用
+    // 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，
+    // 由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
+    // 可以访问组件实例 `this`
+        this.getDetailPost(to.query.id);
+        next()
     },
     mounted(){
         const {id}=this.$route.query;
         this.postId=id;
 
-        this.$axios({
-            url:'/posts',
-            params:{
-                id
-            }
-        }).then(res=>{
-            const {data}=res.data;
-            console.log(data[0]);
+        this.getDetailPost(id);
 
-            this.postData=data[0];
-
-        })
+        this.getRecommendPostData(id);
     },
 
     methods:{
+        getDetailPost(id){
+            this.$axios({
+                url:'/posts',
+                params:{
+                    id
+                }
+            }).then(res=>{
+                const {data}=res.data;
+                console.log(data[0]);
+
+                this.postData=data[0];
+
+            })
+        },
+        //获取相关攻略文章
+        getRecommendPostData(id){
+            this.$axios({
+            url:'/posts/recommend',
+            params:{
+                id
+            }
+            }).then(res=>{
+                const {data}=res.data;
+                console.log(data);
+
+                this.recommendPostData=data;
+            })
+        },
         //收藏文章
         handleStar(){
             this.$axios({
@@ -138,6 +173,13 @@ export default {
             }).then(res=>{
                 this.$message.success(res.data.message);
             })
+        },
+        handleRemove(file, fileList) {
+        console.log(file, fileList);
+        },
+        handlePictureCardPreview(file) {
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = true;
         }
     },
 
@@ -200,5 +242,11 @@ export default {
         text-align: center;
         border: 1px dashed #dddddd;
     }
+}
+.aside-title{
+    font-weight: normal;
+    font-size: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dddddd;
 }
 </style>
