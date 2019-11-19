@@ -144,17 +144,20 @@ export default {
 
     //城市搜索
     handleCitySearch(){
+      this.pageIndex=1;
       this.getPostList();
     },
 
     //点击推荐的城市触发
     handleRecommend(city){
+     this.pageIndex=1;
      this.setSeacrhCity(city)
     },
 
     //设置搜索框的城市名称，并调用搜索方法
     setSeacrhCity(city){
       this.cityNameSearch=city;
+      this.pageIndex=1;
       this.getPostList();
     }
 
