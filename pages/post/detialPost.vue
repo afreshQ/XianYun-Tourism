@@ -86,7 +86,7 @@ export default {
                 }
             }).then(res=>{
                 const {data}=res.data;
-                console.log(data[0]);
+                console.log('当前文章数据',data[0]);
 
                 this.postData=data[0];
 
@@ -101,7 +101,7 @@ export default {
             }
             }).then(res=>{
                 const {data}=res.data;
-                console.log(data);
+                console.log('相关攻略数据',data);
 
                 this.recommendPostData=data;
             })

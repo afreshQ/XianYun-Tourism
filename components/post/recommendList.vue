@@ -1,7 +1,12 @@
 <template>
   <nuxt-link :to="`/post/detialPost?id=${data.id}`">
     <el-row class="recommend-item" justify="space-between">
-        <el-col :span="10"><img class="item-img" src="/img/default.jpg" alt=""></el-col>
+        <el-col :span="10">
+            <img 
+            class="item-img" 
+            :src="data.images[0]?data.images[0]:'/img/default.jpg'" 
+            alt="">
+        </el-col>
         <el-col :span="14">
            <div class="item-text">
                 <div class="title">{{data.title}}</div>
