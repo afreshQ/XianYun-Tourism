@@ -68,7 +68,7 @@ export default {
     },
     data(){
         return {
-
+            Id:this.postId,
             commentData:[],
 
             //图片预览组件
@@ -96,7 +96,7 @@ export default {
     },
     mounted(){
         const {id}=this.$route.query;
-        this.postId=id;
+        this.Id=id;
         this.getComments();
     },
 
