@@ -35,20 +35,22 @@
                                     暂无评论，赶紧抢占沙发！
                 </div>
 
-                <commentItem :data="item" v-for="(item,index) in commentData" :key="index" v-else/>    
+                <div v-else>
+                    <commentItem :data="item" v-for="(item,index) in commentData" :key="index" />    
+                    <!-- 分页 -->
+                    <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="pageIndex"
+                    :page-sizes="[3, 6, 9]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+                    </el-pagination>
+                </div>
             </div>
 
 
-            <!-- 分页 -->
-            <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="pageIndex"
-            :page-sizes="[3, 6, 9]"
-            :page-size="pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="total">
-            </el-pagination>
     </div>
 </template>
 
@@ -58,10 +60,14 @@ export default {
     components:{
         commentItem
     },
+    props:{
+        postId:{
+            type:String,
+            default:null
+        }
+    },
     data(){
         return {
-            // 当前文章id
-            postId:null,
 
             commentData:[],
 
@@ -82,7 +88,12 @@ export default {
 
         }
     },
-
+    //处理点击相关文章能跳到对应文章详情
+    watch:{
+        postId(){
+            this.getComments();
+        }
+    },
     mounted(){
         const {id}=this.$route.query;
         this.postId=id;

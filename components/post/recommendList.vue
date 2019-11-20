@@ -13,7 +13,7 @@
                 <div class="desc">{{data.created_at | timeFormat}}  阅读{{data.watch?data.watch:0}}</div>
             </div>
         </el-col>
-  </el-row>
+    </el-row>
   </nuxt-link>
 </template>
 

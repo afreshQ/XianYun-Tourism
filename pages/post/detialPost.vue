@@ -25,7 +25,7 @@
             </div>
 
             <!-- 文章评论 -->
-            <postComment/>
+            <postComment :postId="postId"/>
 
         </el-col>
         <!-- 相关攻略 -->
@@ -64,13 +64,14 @@ export default {
     },
     //处理点击相关文章能跳到对应文章详情
     beforeRouteUpdate (to, from, next) {
+        this.postId=to.query.id
         this.getDetailPost(to.query.id);
         next()
     },
     mounted(){
         const {id}=this.$route.query;
         this.postId=id;
-
+        
         this.getDetailPost(id);
 
         this.getRecommendPostData(id);
