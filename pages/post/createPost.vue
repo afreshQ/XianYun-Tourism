@@ -42,20 +42,25 @@
                         </el-form-item>
                         <el-form-item class="footer">
                                 <el-button type="primary" @click="submitForm('numberValidateForm')">提交</el-button>
-                                <span> 或者  <nuxt-link to="javaScript:;" class="draft-btn">保存到草稿</nuxt-link></span>
+                                <span> 或者  <span class="draft-btn" @click="saveToDraftBox">保存到草稿</span></span>
                         </el-form-item>
                     </el-form>
                 </div>
             </el-col>
             <el-col :span="5">
-                1
+                <draftBox @setForm="setForm"/>
             </el-col>
         </el-row>
   </section>
 </template>
 
 <script>
+import draftBox from '@/components/post/draftBox';
+import moment from "moment";
 export default {
+    components:{
+        draftBox
+    },
     data(){
         return {
             cities:[],
@@ -154,33 +159,45 @@ export default {
         //提交
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
-            if (valid) {
-                this.$axios({
-                    url:'/posts',
-                    method:'post',
-                    data:this.form,
-                    headers:{
-                        Authorization:"Bearer "+this.$store.state.user.userInfo.token
-                    }
-                    
-                }).then(res=>{
-                    const {message}=res.data;
+                if (valid) {
+                    this.$axios({
+                        url:'/posts',
+                        method:'post',
+                        data:this.form,
+                        headers:{
+                            Authorization:"Bearer "+this.$store.state.user.userInfo.token
+                        }
+                        
+                    }).then(res=>{
+                        const {message}=res.data;
 
-                    this.$message.success(message);
-                    this.form={
-                            title:"",
-                            content:"",
-                            city:""
-                        };
-                })
+                        this.$message.success(message);
+                        this.form={
+                                title:"",
+                                content:"",
+                                city:""
+                            };
+                    })
 
 
-            } else {
-                console.log('error submit!!');
-                return false;
-            }
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
             });
         },
+
+        //保存到草稿箱
+        saveToDraftBox(){
+            const now=new Date().getTime();
+            const data={form:this.form,createTime:moment(now).format('YYYY-MM-DD')}
+            this.$store.commit('post/setDraftList',data)
+        },
+
+
+        setForm(data){
+            this.form=data;
+        }
     }
 }
 </script>
@@ -219,6 +236,7 @@ export default {
     align-items: center;
     .draft-btn{
         color: #ffa500;
+        cursor: pointer;
     }
 }
 </style>
