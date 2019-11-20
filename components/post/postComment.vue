@@ -91,6 +91,7 @@ export default {
     //处理点击相关文章能跳到对应文章详情
     watch:{
         postId(){
+            this.Id=this.postId;
             this.getComments();
         }
     },
@@ -106,7 +107,7 @@ export default {
             this.$axios({
                 url:'/posts/comments',
                 params:{
-                    post:this.postId,
+                    post:this.Id,
                     _start:(this.pageIndex-1)*this.pageSize,
                     _limit:this.pageSize
                 }
