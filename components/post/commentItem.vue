@@ -37,12 +37,21 @@ export default {
     },
     data(){
         return {
+            data:{
+                account:{},
+                pics:{}
+            },
             isShowRely:false,
             floorLength:1
         }
     },
+    watch:{
+        cmtdata(val){
+            this.data=val;
+            this.floorLength=this.countParent(1,this.data);
+        }
+    },
     mounted(){
-        this.floorLength=this.countParent(1,this.data);
     },
     methods:{
         countParent(num, obj){
@@ -56,7 +65,7 @@ export default {
         }
     },
     props:{
-        data:{
+        cmtdata:{
             type:Object,
             default:{}
         }

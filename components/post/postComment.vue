@@ -36,7 +36,7 @@
                 </div>
 
                 <div v-else>
-                    <commentItem :data="item" v-for="(item,index) in commentData" :key="index" />    
+                    <commentItem :cmtdata="item" v-for="(item,index) in commentData" :key="index" />    
                     <!-- 分页 -->
                     <el-pagination
                     @size-change="handleSizeChange"
