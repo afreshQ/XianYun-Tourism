@@ -59,22 +59,23 @@ export default {
     position: relative;
 }
 .city-list{
-    width: 260px;
-    border: 1px solid #dddddd;
+    width: 258px;
     border-bottom: 0;
 }
 .city-item{
+    border: 1px solid #dddddd;
+    margin-bottom: -1px;
     width: 100%;
     line-height: 40px;
+    &:hover{
+        color: #409eff;
+        border-right: none;
+    }
     &-content{
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 0 20px;
-        border-bottom: 1px solid #dddddd;
-        &:hover{
-            color: #409eff;
-        }
         .item-txt{
             font-size: 14px;
         }

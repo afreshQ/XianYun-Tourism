@@ -30,8 +30,7 @@
                 v-for="(item,index) in recommendCity"
                 :key="index" 
                 @click="handleRecommend(item)"
-                >
-                  {{item}}
+                >{{item}}
                 </span>
               </div>
             </div>
@@ -39,7 +38,7 @@
             <div class="post-title">
               <el-row type="flex" justify="space-between" align="middle">
                 <h4 class="title">推荐攻略</h4>
-                <el-button type="primary" icon="el-icon-edit">写游记</el-button>
+                <el-button type="primary" icon="el-icon-edit" @click="$router.push('/post/createPost')">写游记</el-button>
               </el-row>
             </div>
             <!-- 攻略文章 -->
