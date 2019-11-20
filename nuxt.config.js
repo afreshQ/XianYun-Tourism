@@ -25,7 +25,10 @@ export default {
   */
   css: [
     'element-ui/lib/theme-chalk/index.css',
-    'assets/main.css'   //新增自定义的页面过渡样式
+    'assets/main.css',   //新增自定义的页面过渡样式
+    'quill/dist/quill.snow.css',
+    'quill/dist/quill.bubble.css',
+    'quill/dist/quill.core.css'
   ],
   /*
   ** Plugins to load before mounting the App
@@ -33,7 +36,11 @@ export default {
   plugins: [
     '@/plugins/element-ui',
     '@/plugins/axios',
-    { src: '@/plugins/localStorage', ssr: false }
+    { src: '@/plugins/localStorage', ssr: false },
+    { 
+      src: '@plugins/nuxt-quill-plugin',
+      ssr: false //仅在客户端渲染
+    }
   ],
   /*
   ** Nuxt.js dev-modules
