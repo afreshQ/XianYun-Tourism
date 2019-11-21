@@ -40,8 +40,13 @@ export default {
     },
     watch:{
         data(val){
-            this.hotelData=val;
-            this.scenic=val[0].scenic;
+            if(val.length===0){
+                this.scenic=[]
+            }else{
+
+                this.scenic=val[0].scenic;
+            }
+            // this.hotelData=val;
 
             window.onLoad  = ()=>{
                 var map = new AMap.Map('container',{
@@ -77,7 +82,7 @@ export default {
     data(){
         return {
             isShowMore:false,
-            hotelData:[],
+            // hotelData:[],
             scenic:[]
         }
     }
