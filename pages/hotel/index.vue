@@ -102,6 +102,17 @@
 
         <!-- 酒店列表 -->
         <hotelList :data="hotelData"/>
+
+        <!-- 分页 -->
+        <el-row type="flex" justify="end">
+          <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page="pageIndex"
+          :page-size="5"
+          layout="total,prev, pager, next, jumper"
+          :total="total">
+          </el-pagination>
+        </el-row>
     </el-row>
   </section>
 </template>
@@ -130,7 +141,9 @@ export default {
       searchHotelForm:{
         city:null,
         enterTime:null,
-        leftTime:null
+        leftTime:null,
+        _limit:null,
+        _start:null
       },
       //人数输入框显示
       personLabel:'',
@@ -140,7 +153,12 @@ export default {
         child:0
       },
       //酒店数据
-      hotelData:[]
+      hotelData:[],
+
+
+      // 分页
+      pageIndex:1,
+      total:0
     }
   },
 
@@ -148,7 +166,14 @@ export default {
     selectDate(){
       this.searchHotelForm.enterTime=this.selectDate[0];
       this.searchHotelForm.leftTime=this.selectDate[1];
-    }
+    },
+    //监听表单数据
+    searchHotelForm:{
+       handler(val, oldVal){
+         this.getHotelData(this.searchHotelForm);
+       },
+      deep: true
+    },
   },
   //没带上参数就带上默认的
   beforeRouteEnter (to, from, next) {
@@ -161,8 +186,18 @@ export default {
   },
   mounted(){
     const {city,cityName}=this.$route.query;
+    this.searchHotelForm={
+      city,
+      enterTime:null,
+      leftTime:null,
+      _limit:5,
+      _start:(this.pageIndex-1)*this.pageSize
+    }
     this.cityName=cityName;
-    this.getHotelData({city});
+    this.searchCity=cityName;
+    console.log(this.searchHotelForm);
+    
+    // this.getHotelData(this.searchHotelForm);
   },
 
   methods:{
@@ -172,20 +207,10 @@ export default {
           url:'/hotels',
           params:query
         }).then(res=>{
-          const {data}=res.data
+          const {data,total}=res.data
           console.log('酒店数据',data);
           this.hotelData=data;
-
-          if(data.length===0){
-            this.cityName=this.searchCity;
-          }else{
-  
-            const {id,name}=data[0].city;
-            this.searchHotelForm.city=id;
-            this.cityName=name;
-            this.searchCity=name;
-
-          }
+          this.total=total;
         })
     },
     //选择人数
@@ -221,7 +246,7 @@ export default {
     handleSelect(item) {
         this.searchHotelForm.city = item.id;
         
-        this.getHotelData(this.searchHotelForm);
+        // this.getHotelData(this.searchHotelForm);
     },
 
     //处理输入框失去焦点的问题
@@ -230,9 +255,21 @@ export default {
         this.searchHotelForm.city=this.cities[0].id;
     },
 
-
+    // 查看价格
     checkPrice(){
       this.getHotelData(this.searchHotelForm);
+    },
+
+
+
+    //分页
+    // handleSizeChange(val){
+    //   this.searchHotelForm._limit=val;
+    //   this.searchHotelForm._start=0;
+    //   this.pageIndex=1;
+    // },
+    handleCurrentChange(val){
+      this.searchHotelForm._start=(val-1)*5;
     }
   }
 
