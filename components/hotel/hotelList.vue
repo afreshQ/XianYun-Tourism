@@ -14,7 +14,7 @@
             <el-col :span="9">
                 <!-- 酒店标题 -->
                <el-row type="flex" justify="space-between" align="middle">
-                  <el-col :span="20"> <h4 class="hotel-name"> <nuxt-link to="#">{{item.name}}</nuxt-link></h4></el-col>
+                  <el-col :span="20"> <h4 class="hotel-name"> <nuxt-link :to="`/hotel/detialHotel?id=${item.id}`">{{item.name}}</nuxt-link></h4></el-col>
                   <el-col :span="4"> <span class="alias">{{item.hoteltype.name}}</span></el-col>
                </el-row>
                <!-- 英文描述 -->
@@ -54,7 +54,7 @@
         </el-row>
         <!-- 分页 -->
         <el-row>
-
+          
         </el-row>
     </el-row>
 </template>
@@ -66,7 +66,12 @@ export default {
             type:Array,
             default:[]
         }
-    }
+    },
+
+    // data(){
+    //     return {
+    //     }
+    // }
 }
 </script>
 
