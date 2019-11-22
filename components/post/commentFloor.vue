@@ -1,6 +1,6 @@
 <template>
   <div class="floor-item" @mouseenter="isShowRely=!isShowRely" @mouseleave="isShowRely=!isShowRely">
-    <floor v-if="data.parent" :data="data.parent" :floorLength="floorLength-1"/>
+    <floor v-if="data.parent" :data="data.parent" :floorLength="floorLength-1" @reply='reply'/>
     <div class="pad">
         <div class="header">
             <div class="userInfo">
@@ -21,7 +21,7 @@
                 </el-image>
             </el-row>
         </div>
-        <div class="reply" :class="{hide:!isShowRely,show:isShowRely}"><el-link type="primary">回复</el-link></div>
+        <div class="reply" :class="{hide:!isShowRely,show:isShowRely}"><el-link type="primary" @click='reply'>回复</el-link></div>
     </div>
   </div>
 </template>
@@ -48,7 +48,21 @@ export default {
         time(val){
             return moment(val).format('YYYY-MM-DD hh:mm')
         }
+    },
+
+    methods:{
+        reply(Obj) {
+
+            if (Obj.id) {
+                this.$emit('reply', Obj)
+            }else {
+                this.$emit('reply', {name:this.data.account.nickname,id:this.data.id})
+            }
+
+           
+        }
     }
+
 }
 </script>
 

@@ -11,7 +11,7 @@
     
     <div class="content">
         <div class="cmt-floor" v-if="data.parent">
-            <commentFloor :data="data.parent" :floorLength="floorLength-1"/>
+            <commentFloor :data="data.parent" :floorLength="floorLength-1" @reply='reply'/>
         </div>
         <p>{{data.content}}</p>
         <el-row v-if="data.pics.length>0" class="cmt-imgs">
@@ -24,7 +24,7 @@
             </el-image>
         </el-row>
     </div>
-    <div class="reply" :class="{hide:!isShowRely,show:isShowRely}"><el-link type="primary">回复</el-link></div>
+    <div class="reply" :class="{hide:!isShowRely,show:isShowRely}"><el-link type="primary" @click='reply'>回复</el-link></div>
   </div>
 </template>
 
@@ -61,6 +61,13 @@ export default {
                 // console.log(num);
                 
                 return num;
+            }
+        },
+        reply(Obj){ 
+            if(Obj.id) {
+                this.$emit('reply', Obj)
+            }else {
+                this.$emit('reply', {name:this.data.account.nickname,id:this.data.id})
             }
         }
     },

@@ -3,6 +3,7 @@
 
             <div class="post-comment">
                 <h4 class="comment-title">评论</h4>
+                <span class="replyName" v-if="replyName">回复: @{{replyName}}</span>
                 <el-input
                 class="input"
                 type="textarea"
@@ -36,7 +37,7 @@
                 </div>
 
                 <div v-else>
-                    <commentItem :cmtdata="item" v-for="(item,index) in commentData" :key="index" />    
+                    <commentItem :cmtdata="item" v-for="(item,index) in commentData" :key="index" @reply="reply"/>    
                     <!-- 分页 -->
                     <el-pagination
                     @size-change="handleSizeChange"
@@ -78,13 +79,18 @@ export default {
             //评论表单
             form:{
                 content:'',
-                pics:[]
+                pics:[],
+                follow:null,
             },
 
             //分页变量
             pageIndex:1,
             pageSize:3,
-            total:0
+            total:0,
+
+
+
+            replyName:''
 
         }
     },
@@ -169,6 +175,7 @@ export default {
                     content:'',
                     pics:[]
                 };
+                this.replyName='';
             })
         },
 
@@ -186,6 +193,15 @@ export default {
         handleCurrentChange(val){
             this.pageIndex=val;
             this.getComments();
+        },
+
+
+
+        //回复---------------------
+        reply(Obj){
+            this.replyName=Obj.name;
+            
+            this.form.follow=Obj.id;
         }
     }
 }
@@ -225,5 +241,17 @@ export default {
 /deep/.el-pagination{
     width: 100%;
     margin-top: 20px;
+}
+
+
+.replyName{
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #333;
+    display: inline-block;
+    padding: 3px 5px;
+    background-color: #f4f4f5;
+    border: 1px solid #e0e0e3;
+    border-radius: 4px;
 }
 </style>
