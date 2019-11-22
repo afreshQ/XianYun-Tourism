@@ -48,9 +48,19 @@
 
       <!-- 地图模块 -->
       <el-row class="module">
-        <el-col>
+        <el-col :span="16">
+          <div id="container"></div>
         </el-col>
-        <el-col></el-col>
+        <el-col :span="8">
+         <el-tabs style="height:360px;" v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="风景" name="first" style="height:300px;overflow:auto">
+            <div style="padding:8px 0;" v-for="(item,index) in landscape" :key="index" @mouseenter="togMap(item.location)">{{item.name}}</div>
+          </el-tab-pane>
+          <el-tab-pane label="交通" name="second" style="height:300px;overflow:auto">
+            <div style="padding:8px 0;" v-for="(item,index) in traffic" :key="index" @mouseenter="togMap(item.location)">{{item.name}}</div>
+          </el-tab-pane>
+        </el-tabs>
+        </el-col>
       </el-row>
 
       <!-- 入职须知 -->
@@ -113,6 +123,8 @@ export default {
           pics:[]
         },
 
+        activeName:'first',
+
         interiorView:'/img/default.jpg',
 
         imgs:[
@@ -122,29 +134,104 @@ export default {
           '/img/3.jpg',
           '/img/4.jpg',
           '/img/5.jpg',
-        ]
+        ],
+
+
+        landscape:[],
+        traffic:[]
+      }
+    },
+    watch:{
+      async detialData(val){
+        //地图
+        const center=[val.location.longitude, val.location.latitude];
+        const loc=`${val.location.longitude},${val.location.latitude}`
+        await this.getfj(loc);
+        await this.getgj(loc);
+        this.loadmap(center);
       }
     },
     mounted(){
-      this.$axios({
-        url:'/hotels',
-        params:this.$route.query
-      }).then(res=>{
-        console.log(res.data);
-        const {data}=res.data;
-        this.detialData=data[0];
-        // this.interiorView=data[0].photos;
-      })
+      this.getHotelDetial();
+      
     },
     methods:{
+      // 加载地图
+      loadmap(center){
+        const map = new window.AMap.Map('container',{
+          zoom:20,
+          center,
+          })
+          var marker = new AMap.Marker({
+              position:center
+          });
+          marker.setMap(map);
+      },
+      getfj(loc){
+        this.$axios({
+          url:'https://restapi.amap.com/v3/place/around?parameters',
+          params:{
+            key:'ac7a16071cdc16ce24ddd163ef89d86c',
+            location:loc,
+            types:110200,
+            radius:2000
+          }
+        }).then(res=>{
+          this.landscape=res.data.pois;
+          
+        })
+      },
+      //获取公交服务
+      getgj(loc){
+        this.$axios({
+          url:'https://restapi.amap.com/v3/place/around?parameters',
+          params:{
+            key:'ac7a16071cdc16ce24ddd163ef89d86c',
+            location:loc,
+            types:150700,
+            radius:2000
+          }
+        }).then(res=>{
+          this.traffic=res.data.pois;
+          console.log(res);
+          
+        })
+      },
+
+      //获取酒店信息
+      getHotelDetial(){
+          this.$axios({
+            url:'/hotels',
+            params:this.$route.query
+          }).then(res=>{
+            console.log(res.data);
+            const {data}=res.data;
+            this.detialData=data[0];
+            // this.interiorView=data[0].photos;
+          })
+      },
+      // 切换图片
       toggleImg(src){
         this.interiorView=src;
+      },
+      togMap(location){
+        let center=location.split(',');
+        this.loadmap(center)
+      },
+      handleClick(tab, event) {
+        console.log(tab, event);
       }
     }
 }
 </script>
 
 <style lang="less" scoped>
+
+#container{
+    width: 650px;
+    height: 360px;
+}
+
 .container{
     width: 1000px;
     margin: 20px auto;
