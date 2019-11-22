@@ -120,8 +120,6 @@ export default {
     #container{
         width: 400px;
         height: 260px;
-        position: absolute;
-        cursor: pointer;
     }
 }
 
