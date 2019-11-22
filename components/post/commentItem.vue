@@ -15,13 +15,16 @@
         </div>
         <p>{{data.content}}</p>
         <el-row v-if="data.pics.length>0" class="cmt-imgs">
-            <el-image 
+            <img 
             v-for="(item,index) in data.pics" 
             :key="index"
-            style="width: 100px; height: 100px"
+            style="width: 100px; height: 100px;cursor: pointer;"
             :src="$axios.defaults.baseURL+item.url" 
-            :preview-src-list="[$axios.defaults.baseURL+item.url]">
-            </el-image>
+            @click="fanDa($axios.defaults.baseURL+item.url)"
+            >
+            <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt="">
+            </el-dialog>
         </el-row>
     </div>
     <div class="reply" :class="{hide:!isShowRely,show:isShowRely}"><el-link type="primary" @click='reply'>回复</el-link></div>
@@ -42,7 +45,11 @@ export default {
                 pics:{}
             },
             isShowRely:false,
-            floorLength:1
+            floorLength:1,
+
+            // 图片预览
+            dialogVisible:false,
+            dialogImageUrl:''
         }
     },
     watch:{
@@ -69,6 +76,10 @@ export default {
             }else {
                 this.$emit('reply', {name:this.data.account.nickname,id:this.data.id})
             }
+        },
+        fanDa(src){
+            this.dialogImageUrl=src;
+            this.dialogVisible=true;
         }
     },
     props:{
