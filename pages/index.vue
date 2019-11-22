@@ -73,7 +73,7 @@ export default {
                 {
                     name:'酒店',
                     placeholder:'请输入城市搜索酒店',
-                    pageUrl: "/hotel?city="
+                    pageUrl: "/hotel?cityName="
                 },
                 {
                     name:'机票',

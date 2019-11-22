@@ -101,7 +101,9 @@ export default {
           console.log(data);
           this.allMenuData=data;
       })
-
+      if(this.$route.query.city){
+        this.cityNameSearch=this.$route.query.city;
+      }
       this.getPostList()
   },
 
